@@ -7,6 +7,13 @@ import type {
   TestPageManifest,
 } from '../types.js';
 
+const STRUCTURAL_SUPER_TYPES = ['container', 'contentfragment', 'experiencefragment'];
+
+function isStructural(node: ComponentNode): boolean {
+  return !!node.superResourceType &&
+    STRUCTURAL_SUPER_TYPES.some((t) => node.superResourceType!.includes(t));
+}
+
 function slugify(resourceType: string): string {
   return resourceType
     .replace(/\//g, '--')
@@ -46,7 +53,7 @@ async function populatePage(
     const relPath = node.path.slice(originalBase.length);
     const testNodePath = `${testPagePath}${relPath}`;
     const box = boxes.get(node.path);
-    const placeholder = box !== undefined && !keepTypes.has(node.resourceType);
+    const placeholder = box !== undefined && !keepTypes.has(node.resourceType) && !isStructural(node);
 
     if (placeholder) {
       await mcp.setNode(testNodePath, {
@@ -90,7 +97,7 @@ export async function generateTestPages(
   await mcp.createPage({
     parentPath: testParent,
     label: controlLabel,
-    title: `Perf Control — ${pageId}`,
+    title: pageData.pageTitle || `Perf Control — ${pageId}`,
     ...sharedPageArgs,
   });
   const controlPath = `${testParent}/${controlLabel}`;
@@ -113,7 +120,7 @@ export async function generateTestPages(
     await mcp.createPage({
       parentPath: testParent,
       label,
-      title: `Perf Isolated — ${resourceType}`,
+      title: pageData.pageTitle || `Perf Isolated — ${resourceType}`,
       ...sharedPageArgs,
     });
     const isolatedPath = `${testParent}/${label}`;

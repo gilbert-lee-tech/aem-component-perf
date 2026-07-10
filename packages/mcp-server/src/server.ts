@@ -40,6 +40,28 @@ export function createServer(aem: AemClient): McpServer {
       const nodes: PageData['nodes'] = [];
       traverseNodes(jcrContent, `${pagePath}/jcr:content`, 0, nodes);
 
+      // Enrich nodes with sling:resourceSuperType from component definitions.
+      // Content nodes don't carry this; it lives on the component node in /apps or /libs.
+      const superTypeCache = new Map<string, string>();
+      for (const node of nodes) {
+        if (superTypeCache.has(node.resourceType)) continue;
+        for (const prefix of ['/apps', '/libs']) {
+          try {
+            const def = await aem.getJson(`${prefix}/${node.resourceType}.json`) as Record<string, unknown>;
+            if (typeof def['sling:resourceSuperType'] === 'string') {
+              superTypeCache.set(node.resourceType, def['sling:resourceSuperType']);
+              break;
+            }
+          } catch {
+            // not found at this prefix, try next
+          }
+        }
+      }
+      for (const node of nodes) {
+        const looked = superTypeCache.get(node.resourceType);
+        if (looked) node.superResourceType = looked;
+      }
+
       const result: PageData = {
         pagePath,
         template:
@@ -48,6 +70,8 @@ export function createServer(aem: AemClient): McpServer {
           typeof jcrContent['sling:resourceType'] === 'string'
             ? jcrContent['sling:resourceType']
             : '',
+        pageTitle:
+          typeof jcrContent['jcr:title'] === 'string' ? jcrContent['jcr:title'] : '',
         nodes,
       };
 

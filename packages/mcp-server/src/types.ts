@@ -12,6 +12,7 @@ export interface PageData {
   pagePath: string;
   template: string;
   pageResourceType: string;
+  pageTitle: string;
   /** All nodes with sling:resourceType, depth-first (document) order. */
   nodes: ComponentNode[];
 }
