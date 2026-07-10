@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>AEM Component Perf - Slow Components UI Apps Package</comment>
+<entry key="allowIndexDefinitions">false</entry>
+<entry key="created">2026-07-10T22:22:52.935Z</entry>
+<entry key="groupId">com.aemcomponentperf</entry>
+<entry key="name">aem-component-perf-slow-components</entry>
+<entry key="description">AEM components that simulate slow backend processing for performance testing.</entry>
+<entry key="artifactId">aem-component-perf-slow-components-ui.apps</entry>
+<entry key="version">1.0-SNAPSHOT</entry>
+<entry key="packageType">application</entry>
+<entry key="requiresRoot">false</entry>
+<entry key="group">aem-component-perf</entry>
+</properties>

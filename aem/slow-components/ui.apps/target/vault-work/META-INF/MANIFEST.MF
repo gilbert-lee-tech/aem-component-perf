@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Created-By: Apache Jackrabbit FileVault - Package Maven Plugin 1.3.2
+Build-Jdk-Spec: 11
+Implementation-Title: AEM Component Perf - Slow Components UI Apps Packa
+ ge
+Implementation-Version: 1.0-SNAPSHOT
+Content-Package-Type: application
+Content-Package-Id: aem-component-perf:aem-component-perf-slow-component
+ s:1.0-SNAPSHOT
+Content-Package-Description: AEM components that simulate slow backend p
+ rocessing for performance testing.
+Content-Package-Roots: /apps/aem-component-perf/components/content/slow-
+ image,/apps/aem-component-perf/components/content/slow-list,/apps/aem-c
+ omponent-perf/components/content/slow-teaser,/apps/aem-component-perf/c
+ omponents/content/slow-text,/apps/aem-component-perf/install
+

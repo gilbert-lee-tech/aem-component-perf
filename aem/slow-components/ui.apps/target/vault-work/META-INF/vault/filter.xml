@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+  <filter root="/apps/aem-component-perf/components/content/slow-text"/>
+  <filter root="/apps/aem-component-perf/components/content/slow-image"/>
+  <filter root="/apps/aem-component-perf/components/content/slow-teaser"/>
+  <filter root="/apps/aem-component-perf/components/content/slow-list"/>
+  <filter root="/apps/aem-component-perf/install"/>
+</workspaceFilter>
