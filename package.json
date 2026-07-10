@@ -1,0 +1,14 @@
+{
+  "name": "aem-component-perf",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf packages/*/dist"
+  }
+}

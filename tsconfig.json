@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/mcp-server" },
+    { "path": "packages/pipeline" },
+    { "path": "packages/report" }
+  ]
+}
