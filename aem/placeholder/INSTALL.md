@@ -42,7 +42,7 @@ curl -sf -u admin:admin \
      http://localhost:4502/crx/packmgr/service.jsp \
      -F "cmd=upload" \
      -F "force=true" \
-     -F "package=@aem/placeholder/placeholder-pkg.zip" | python3 -m json.tool
+     -F "file=@aem/placeholder/placeholder-pkg.zip"
 ```
 
 ### 3. Install
@@ -50,8 +50,7 @@ curl -sf -u admin:admin \
 ```bash
 curl -sf -u admin:admin \
      -X POST \
-     "http://localhost:4502/crx/packmgr/service/.json/etc/packages/aem-component-perf/placeholder-pkg.zip?cmd=install" \
-     | python3 -m json.tool
+     "http://localhost:4502/crx/packmgr/service/.json/etc/packages/aem-component-perf/aem-component-perf-placeholder-1.0.zip?cmd=install"
 ```
 
 Both curl responses should include `"success": true`.
