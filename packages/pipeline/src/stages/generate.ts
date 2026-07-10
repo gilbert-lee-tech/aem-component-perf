@@ -7,7 +7,7 @@ import type {
   TestPageManifest,
 } from '../types.js';
 
-const STRUCTURAL_SUPER_TYPES = ['container', 'contentfragment', 'experiencefragment'];
+const STRUCTURAL_SUPER_TYPES = ['container'];
 
 function isStructural(node: ComponentNode): boolean {
   return !!node.superResourceType &&
