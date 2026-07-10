@@ -14,7 +14,7 @@ const DEFAULT_SERVER_PATH = join(__dirname, '../../mcp-server/dist/index.js');
 const { positionals, values } = parseArgs({
   allowPositionals: true,
   options: {
-    url: { type: 'string' },
+    url: { type: 'string', default: process.env['PAGE_URL'] },
     'aem-url': { type: 'string', default: process.env['AEM_URL'] ?? 'http://localhost:4502' },
     'aem-user': { type: 'string', default: process.env['AEM_USER'] ?? 'admin' },
     'aem-pass': { type: 'string', default: process.env['AEM_PASS'] ?? 'admin' },
@@ -46,7 +46,7 @@ const serverPath = values['server-path']!;
 if (subcommand === 'run') {
   const url = values['url'];
   if (!url) {
-    console.error('Usage: aem-pipeline run --url <aem-page-url> [options]');
+    console.error('Error: page URL is required. Pass --url <aem-page-url> or set PAGE_URL in .env');
     process.exit(1);
   }
 
@@ -77,7 +77,7 @@ if (subcommand === 'run') {
 } else if (subcommand === 'teardown') {
   const url = values['url'];
   if (!url) {
-    console.error('Usage: aem-pipeline teardown --url <original-aem-page-url> [options]');
+    console.error('Error: page URL is required. Pass --url <aem-page-url> or set PAGE_URL in .env');
     process.exit(1);
   }
 

@@ -100,7 +100,7 @@ Common options:
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--url` | *(required)* | AEM page URL to analyse |
+| `--url` | `$PAGE_URL` | AEM page URL to analyse (required if `PAGE_URL` not set in `.env`) |
 | `--aem-url` | `$AEM_URL` / `http://localhost:4502` | AEM Author base URL |
 | `--aem-user` | `$AEM_USER` / `admin` | AEM username |
 | `--aem-pass` | `$AEM_PASS` / `admin` | AEM password |
