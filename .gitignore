@@ -3,3 +3,4 @@ packages/*/dist/
 results/
 *.tsbuildinfo
 .env
+aem/placeholder/placeholder-pkg.zip

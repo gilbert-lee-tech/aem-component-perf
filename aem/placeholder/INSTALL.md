@@ -23,119 +23,38 @@ aem-component-perf/components/content/placeholder
 
 ---
 
-## Method 1 — Sling POST (fastest for local dev)
+## Build and install (Content Package)
 
-Run from the repository root against a running AEM Author instance.  
-Replace `admin:admin` and `http://localhost:4502` if your credentials or port differ.
+The package source lives in `aem/placeholder/placeholder-pkg/`.  Run from the repository
+root against a running AEM Author instance.  Replace `admin:admin` and
+`http://localhost:4502` if your credentials or port differ.
 
-```bash
-BASE=http://localhost:4502
-CREDS=admin:admin
-
-# 1. Create the folder hierarchy (safe to re-run; updates existing nodes).
-curl -sf -u "$CREDS" -X POST "$BASE/apps/aem-component-perf" \
-     -d "jcr:primaryType=sling:Folder"
-
-curl -sf -u "$CREDS" -X POST "$BASE/apps/aem-component-perf/components" \
-     -d "jcr:primaryType=sling:Folder"
-
-curl -sf -u "$CREDS" -X POST "$BASE/apps/aem-component-perf/components/content" \
-     -d "jcr:primaryType=sling:Folder"
-
-# 2. Create the cq:Component node.
-curl -sf -u "$CREDS" -X POST \
-     "$BASE/apps/aem-component-perf/components/content/placeholder" \
-     -d "jcr:primaryType=cq:Component" \
-     -d "jcr:title=Perf Placeholder" \
-     -d "jcr:description=Zero-cost sized placeholder for performance testing." \
-     -d "componentGroup=.hidden"
-
-# 3. Upload the HTL script via WebDAV PUT.
-# Sling POST multipart (-F) returns 409 for this node; PUT is the reliable path.
-curl -sf -u "$CREDS" \
-     -X PUT \
-     -H "Content-Type: text/html" \
-     --data-binary @aem/placeholder/placeholder.html \
-     "$BASE/apps/aem-component-perf/components/content/placeholder/placeholder.html"
-```
-
-All five commands exit silently on success (HTTP 200/201).  Pass `-v` to any curl call
-to inspect the response if something goes wrong.
-
----
-
-## Method 2 — FileVault (vlt)
-
-If you have FileVault configured and checked out `/apps` already:
+### 1. Build the zip
 
 ```bash
-mkdir -p jcr_root/apps/aem-component-perf/components/content/placeholder
-cp aem/placeholder/.content.xml \
-   jcr_root/apps/aem-component-perf/components/content/placeholder/.content.xml
-cp aem/placeholder/placeholder.html \
-   jcr_root/apps/aem-component-perf/components/content/placeholder/placeholder.html
-
-vlt commit -m "Add perf-placeholder component"
+cd aem/placeholder/placeholder-pkg && zip -r ../placeholder-pkg.zip . && cd ../../..
 ```
 
----
-
-## Method 3 — Content Package (reproducible / CI)
-
-Build a minimal content package from the two component files and install via Package
-Manager (`http://localhost:4502/crx/packmgr`).
-
-### Package structure
-
-```
-placeholder-pkg/
-├── META-INF/vault/
-│   ├── filter.xml
-│   └── properties.xml
-└── jcr_root/apps/aem-component-perf/components/content/placeholder/
-    ├── .content.xml
-    └── placeholder.html
-```
-
-### `META-INF/vault/filter.xml`
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<workspaceFilter version="1.0">
-  <filter root="/apps/aem-component-perf/components/content/placeholder"/>
-</workspaceFilter>
-```
-
-### `META-INF/vault/properties.xml`
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-  <entry key="name">aem-component-perf-placeholder</entry>
-  <entry key="version">1.0</entry>
-  <entry key="group">aem-component-perf</entry>
-</properties>
-```
-
-### Build and install
+### 2. Upload
 
 ```bash
-cd placeholder-pkg
-zip -r ../placeholder-pkg.zip .
-cd ..
-
 curl -sf -u admin:admin \
      http://localhost:4502/crx/packmgr/service.jsp \
      -F "cmd=upload" \
      -F "force=true" \
-     -F "package=@placeholder-pkg.zip" | python3 -m json.tool
+     -F "package=@aem/placeholder/placeholder-pkg.zip" | python3 -m json.tool
+```
 
+### 3. Install
+
+```bash
 curl -sf -u admin:admin \
      -X POST \
      "http://localhost:4502/crx/packmgr/service/.json/etc/packages/aem-component-perf/placeholder-pkg.zip?cmd=install" \
      | python3 -m json.tool
 ```
+
+Both curl responses should include `"success": true`.
 
 ---
 
@@ -169,14 +88,12 @@ Expected output (verbatim):
 Create a test node with explicit dimensions and request it:
 
 ```bash
-# Create a test page node (assumes /content/we-retail exists; adapt path as needed)
 curl -sf -u admin:admin http://localhost:4502/content/placeholder-test \
      -d "jcr:primaryType=nt:unstructured" \
      -d "sling:resourceType=aem-component-perf/components/content/placeholder" \
      -d "width=800" \
      -d "height=300"
 
-# Render it (expect a 800×300 div, nothing else)
 curl -s -u admin:admin \
      "http://localhost:4502/content/placeholder-test.html?wcmmode=disabled"
 ```
@@ -197,10 +114,6 @@ every attribution result.  Run this check before starting any measurement run.
 Open a browser, log in to AEM, navigate to a page that uses only placeholder components
 with `?wcmmode=disabled`, and open DevTools → Network.  Filter by JS and CSS.  **No
 requests should appear beyond the page template's own clientlibs.**
-
-Alternatively, run a quick Lighthouse check on the control page and compare its
-transferred-bytes figure to a known-clean page.  The delta should be zero or only a few
-bytes of HTML overhead.
 
 To confirm there is no `cq:ClientLibraryFolder` node under the component:
 
