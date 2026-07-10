@@ -50,10 +50,13 @@ curl -sf -u "$CREDS" -X POST \
      -d "jcr:description=Zero-cost sized placeholder for performance testing." \
      -d "componentGroup=.hidden"
 
-# 3. Upload the HTL script.
+# 3. Upload the HTL script via WebDAV PUT.
+# Sling POST multipart (-F) returns 409 for this node; PUT is the reliable path.
 curl -sf -u "$CREDS" \
-     "$BASE/apps/aem-component-perf/components/content/placeholder/" \
-     -F "placeholder.html=@aem/placeholder/placeholder.html;type=text/html"
+     -X PUT \
+     -H "Content-Type: text/html" \
+     --data-binary @aem/placeholder/placeholder.html \
+     "$BASE/apps/aem-component-perf/components/content/placeholder/placeholder.html"
 ```
 
 All five commands exit silently on success (HTTP 200/201).  Pass `-v` to any curl call
