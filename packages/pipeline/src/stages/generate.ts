@@ -65,6 +65,7 @@ async function populatePage(
         'sling:resourceType': placeholderResourceType,
         width: box.width,
         height: box.height,
+        originalType: node.resourceType,
       });
     } else {
       await mcp.setNode(testNodePath, {
