@@ -53,6 +53,27 @@ function extractMetrics(lhr: Lhr): LighthouseMetrics {
   };
 }
 
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+async function runOnce(url: string, authHeader: string): Promise<LhRunnerResult> {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  try {
+    const port = Number(new URL(browser.wsEndpoint()).port);
+    const result = (await lighthouse(url, {
+      ...LIGHTHOUSE_FLAGS,
+      port,
+      extraHeaders: { Authorization: authHeader },
+    })) as LhRunnerResult | null;
+    if (!result) throw new Error(`Lighthouse returned null for ${url}`);
+    return result;
+  } finally {
+    await browser.close();
+  }
+}
+
 export async function measurePage(
   url: string,
   pageId: string,
@@ -62,31 +83,31 @@ export async function measurePage(
   const runs: PageMeasurement['runs'] = [];
 
   for (let i = 0; i < config.lighthouseRuns; i++) {
-    // Fresh browser per run = cold cache, as required.
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    const MAX_ATTEMPTS = 3;
+    let lastErr: unknown;
+    let result: LhRunnerResult | undefined;
 
-    try {
-      const port = Number(new URL(browser.wsEndpoint()).port);
-      const result = (await lighthouse(url, {
-        ...LIGHTHOUSE_FLAGS,
-        port,
-        extraHeaders: { Authorization: authHeader },
-      })) as LhRunnerResult | null;
-
-      if (!result) throw new Error(`Lighthouse returned null for ${url} (run ${i})`);
-
-      const metrics = extractMetrics(result.lhr);
-      const rawJson = Array.isArray(result.report) ? result.report[0]! : result.report;
-      const rawPath = await saveRunResult(config.resultsDir, pageId, i, rawJson);
-
-      runs.push({ index: i, metrics, rawPath });
-      console.log(`      run ${i + 1}/${config.lighthouseRuns} — score ${metrics.performanceScore.toFixed(0)}, TBT ${metrics.tbt.toFixed(0)}ms`);
-    } finally {
-      await browser.close();
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      if (attempt > 0) await sleep(1000 * attempt);
+      try {
+        result = await runOnce(url, authHeader);
+        break;
+      } catch (err) {
+        lastErr = err;
+      }
     }
+
+    if (!result) throw lastErr;
+
+    const metrics = extractMetrics(result.lhr);
+    const rawJson = Array.isArray(result.report) ? result.report[0]! : result.report;
+    const rawPath = await saveRunResult(config.resultsDir, pageId, i, rawJson);
+
+    runs.push({ index: i, metrics, rawPath });
+    console.log(`      run ${i + 1}/${config.lighthouseRuns} — score ${metrics.performanceScore.toFixed(0)}, TBT ${metrics.tbt.toFixed(0)}ms`);
+
+    // Brief pause so the previous Chrome process fully exits before the next launch.
+    if (i < config.lighthouseRuns - 1) await sleep(300);
   }
 
   return { pageId, url, runs, median: medianMetrics(runs) };
