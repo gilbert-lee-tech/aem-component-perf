@@ -21,7 +21,7 @@ function slugify(resourceType: string): string {
     .slice(0, 60);
 }
 
-const IGNORE_ISOLATED_TYPES = ['container', 'contentfragment', 'experiencefragment'];
+const IGNORE_ISOLATED_TYPES = ['container'];
 
 function uniqueContentTypes(
   nodes: ComponentNode[],
