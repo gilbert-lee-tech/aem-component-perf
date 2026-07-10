@@ -4,6 +4,7 @@ import { writeFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { render } from '@aem-component-perf/report/lib';
 import { LocalMcpAdapter } from './mcp-client.js';
 import { run, normalizeUrl, makePageId } from './pipeline.js';
 import type { PipelineConfig } from './types.js';
@@ -68,9 +69,14 @@ if (subcommand === 'run') {
       );
     }
 
-    const outPath = join(config.resultsDir, result.pageId, 'attribution.json');
+    const outDir = join(config.resultsDir, result.pageId);
+    const outPath = join(outDir, 'attribution.json');
     await writeFile(outPath, JSON.stringify(result, null, 2), 'utf8');
     console.log(`\nFull results → ${outPath}`);
+
+    const reportPath = join(outDir, 'report.html');
+    await writeFile(reportPath, render(result), 'utf8');
+    console.log(`Report       → ${reportPath}`);
   } finally {
     await mcp.close();
   }
