@@ -21,13 +21,17 @@ function slugify(resourceType: string): string {
     .slice(0, 60);
 }
 
+const IGNORE_ISOLATED_TYPES = ['container'];
+
 function uniqueContentTypes(
   nodes: ComponentNode[],
   boxes: Map<string, BoundingBox>,
 ): string[] {
   const seen = new Set<string>();
   for (const node of nodes) {
-    if (boxes.has(node.path)) seen.add(node.resourceType);
+    if (!boxes.has(node.path)) continue;
+    if (IGNORE_ISOLATED_TYPES.some((t) => node.resourceType.includes(t))) continue;
+    seen.add(node.resourceType);
   }
   return [...seen];
 }
