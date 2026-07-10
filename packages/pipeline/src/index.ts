@@ -21,7 +21,7 @@ const { positionals, values } = parseArgs({
     'test-root': { type: 'string', default: '/content/perf-test' },
     'placeholder-type': {
       type: 'string',
-      default: 'aem-component-perf/placeholder',
+      default: 'aem-component-perf/components/content/placeholder',
     },
     runs: { type: 'string', default: '5' },
     'results-dir': { type: 'string', default: './results' },
