@@ -20,8 +20,10 @@ export interface McpClient {
 }
 
 function extractText(result: unknown): string {
-  const content = (result as { content: Array<{ type: string; text?: string }> }).content;
-  return content.find((c) => c.type === 'text')?.text ?? '';
+  const r = result as { content: Array<{ type: string; text?: string }>; isError?: boolean };
+  const text = r.content.find((c) => c.type === 'text')?.text ?? '';
+  if (r.isError) throw new Error(text);
+  return text;
 }
 
 export class LocalMcpAdapter implements McpClient {

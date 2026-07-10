@@ -31,9 +31,11 @@ export async function captureLayout(
 
     for (const node of nodes) {
       const box = await page.evaluate((path: string) => {
-        // Attribute value is quoted so colons need no CSS escaping.
-        const el = document.querySelector(`[data-path="${path}"]`);
-        if (!el) return null;
+        // AEM injects a zero-size <cq data-path="..."> marker inside the
+        // component's wrapper div. Measure the parent, which is the rendered element.
+        const marker = document.querySelector(`[data-path="${path}"]`);
+        if (!marker) return null;
+        const el = marker.parentElement ?? marker;
         const rect = el.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return null;
         return {

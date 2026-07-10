@@ -71,6 +71,14 @@ export async function generateTestPages(
   config: PipelineConfig,
   pageId: string,
 ): Promise<TestPageManifest> {
+  // Create the per-run container page that holds control + all isolated pages.
+  await mcp.createPage({
+    parentPath: config.testRoot,
+    label: pageId,
+    title: `Perf Run — ${pageId}`,
+    template: pageData.template,
+    pageResourceType: pageData.pageResourceType,
+  });
   const testParent = `${config.testRoot}/${pageId}`;
   const sharedPageArgs = {
     template: pageData.template,
