@@ -22,6 +22,10 @@ public class DelayModel {
     @Default(intValues = 0)
     private int delaySeconds;
 
+    public int getDelaySeconds() {
+        return delaySeconds;
+    }
+
     @PostConstruct
     protected void init() {
         try {

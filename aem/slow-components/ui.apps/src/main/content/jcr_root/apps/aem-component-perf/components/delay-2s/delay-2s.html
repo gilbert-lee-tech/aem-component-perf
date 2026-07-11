@@ -6,6 +6,6 @@
 <sly data-sly-test="${wcmmode.disabled}">
     <sly data-sly-use.model="${'com.aemcomponentperf.core.models.DelayModel' @ delaySeconds=2}"/>
     <div class="cmp-delay-2s">
-        <p>Delay 2s (backend delay)</p>
+        <p>Delay ${model.delaySeconds}s (backend delay)</p>
     </div>
 </sly>

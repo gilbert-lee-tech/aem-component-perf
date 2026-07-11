@@ -5,7 +5,7 @@
 </sly>
 <sly data-sly-test="${wcmmode.disabled}">
     <sly data-sly-use.model="${'com.aemcomponentperf.core.models.DelayModel' @ delaySeconds=4}"/>
-    <div class="cmp-delay-4s" style="display:flex;align-items:center;justify-content:center;width:800px;height:450px;background:#c8d8e8;font:bold 18px/1 sans-serif;color:#445566;">
-        Delay 4s (backend delay)
+    <div class="cmp-delay-4s">
+        <p>Delay ${model.delaySeconds}s (backend delay)</p>
     </div>
 </sly>
