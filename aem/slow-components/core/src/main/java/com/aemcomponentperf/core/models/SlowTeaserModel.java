@@ -19,8 +19,8 @@ public class SlowTeaserModel {
     @PostConstruct
     protected void init() {
         try {
-            log.debug("SlowTeaserModel: simulating 5s backend delay");
-            Thread.sleep(5_000);
+            log.debug("SlowTeaserModel: simulating 6s backend delay");
+            Thread.sleep(6_000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

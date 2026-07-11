@@ -19,8 +19,8 @@ public class SlowListModel {
     @PostConstruct
     protected void init() {
         try {
-            log.debug("SlowListModel: simulating 5s backend delay (slow JCR query)");
-            Thread.sleep(5_000);
+            log.debug("SlowListModel: simulating 8s backend delay");
+            Thread.sleep(8_000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

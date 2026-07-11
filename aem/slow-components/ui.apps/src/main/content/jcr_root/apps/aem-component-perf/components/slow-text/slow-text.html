@@ -1,0 +1,11 @@
+<sly data-sly-test="${!wcmmode.disabled}">
+    <div style="border:2px dashed #888;padding:16px 20px;background:#f8f8f8;font:bold 13px/1.4 monospace;color:#444;">
+        Slow Text (2s)
+    </div>
+</sly>
+<sly data-sly-test="${wcmmode.disabled}">
+    <sly data-sly-use.model="com.aemcomponentperf.core.models.SlowTextModel"/>
+    <div class="cmp-slow-text">
+        <p>Slow Text (2s backend delay)</p>
+    </div>
+</sly>

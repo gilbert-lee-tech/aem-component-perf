@@ -19,8 +19,8 @@ public class SlowImageModel {
     @PostConstruct
     protected void init() {
         try {
-            log.debug("SlowImageModel: simulating 5s backend delay");
-            Thread.sleep(5_000);
+            log.debug("SlowImageModel: simulating 4s backend delay");
+            Thread.sleep(4_000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

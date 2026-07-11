@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             http://maven.apache.org/xsd/maven-4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -16,31 +16,16 @@
   <packaging>content-package</packaging>
   <name>AEM Component Perf - Slow Components UI Apps Package</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.aemcomponentperf</groupId>
-      <artifactId>aem-component-perf-slow-components-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>filevault-package-maven-plugin</artifactId>
+        <extensions>true</extensions>
         <configuration>
           <group>aem-component-perf</group>
           <name>aem-component-perf-slow-components</name>
           <packageType>application</packageType>
-          <embeds>
-            <embed>
-              <groupId>com.aemcomponentperf</groupId>
-              <artifactId>aem-component-perf-slow-components-core</artifactId>
-              <target>/apps/aem-component-perf/install</target>
-              <isAllVersionsFilter>true</isAllVersionsFilter>
-            </embed>
-          </embeds>
         </configuration>
       </plugin>
     </plugins>

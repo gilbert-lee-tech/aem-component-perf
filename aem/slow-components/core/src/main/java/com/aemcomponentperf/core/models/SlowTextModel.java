@@ -19,8 +19,8 @@ public class SlowTextModel {
     @PostConstruct
     protected void init() {
         try {
-            log.debug("SlowTextModel: simulating 5s backend delay");
-            Thread.sleep(5_000);
+            log.debug("SlowTextModel: simulating 2s backend delay");
+            Thread.sleep(2_000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

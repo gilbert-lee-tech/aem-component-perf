@@ -13,34 +13,66 @@
   </parent>
 
   <artifactId>aem-component-perf-slow-components-core</artifactId>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
   <name>AEM Component Perf - Slow Components Core Bundle</name>
 
   <dependencies>
-    <!-- AEM 6.5 uber-jar includes Sling Models API, javax.annotation, and all AEM APIs -->
     <dependency>
       <groupId>com.adobe.aem</groupId>
       <artifactId>uber-jar</artifactId>
       <classifier>apis</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.models.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>4.2.1</version>
-        <extensions>true</extensions>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
         <configuration>
-          <instructions>
-            <Bundle-SymbolicName>com.aemcomponentperf.core</Bundle-SymbolicName>
-            <Sling-Model-Packages>com.aemcomponentperf.core.models</Sling-Model-Packages>
-            <Export-Package>com.aemcomponentperf.core.models</Export-Package>
-            <Import-Package>*</Import-Package>
-          </instructions>
+          <bnd><![CDATA[
+Bundle-SymbolicName: com.aemcomponentperf.core
+Export-Package: com.aemcomponentperf.core.models
+Import-Package: javax.annotation;version=0.0.0,org.apache.sling.api;version=0.0.0,org.apache.sling.models.annotations;version=0.0.0,org.slf4j;version=0.0.0,*
+-plugin org.apache.sling.bnd.models.ModelsScannerPlugin
+          ]]></bnd>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>autoInstallPackage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>sling-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>install-bundle</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>install</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
