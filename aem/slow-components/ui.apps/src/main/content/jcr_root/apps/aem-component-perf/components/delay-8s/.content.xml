@@ -2,6 +2,6 @@
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
           xmlns:cq="http://www.day.com/jcr/cq/1.0"
           jcr:primaryType="cq:Component"
-          jcr:title="Slow List (8s)"
-          jcr:description="List component with a 5-second simulated backend delay (mimics a slow JCR query)."
+          jcr:title="Delay 8s"
+          jcr:description="Component with an 8-second simulated backend delay."
           componentGroup="AEM Slow Perf. Components"/>

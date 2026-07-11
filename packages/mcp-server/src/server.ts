@@ -11,6 +11,7 @@ function normalizePagePath(input: string): string {
   } catch {
     path = input;
   }
+  path = path.replace(/^\/editor\.html/, '');
   return path.replace(/\.(html|infinity\.json)$/, '');
 }
 

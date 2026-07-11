@@ -1,12 +1,12 @@
 <sly data-sly-test="${!wcmmode.disabled}">
     <div style="border:2px dashed #888;padding:16px 20px;background:#f8f8f8;font:bold 13px/1.4 monospace;color:#444;">
-        Slow Teaser (6s)
+        Delay 6s
     </div>
 </sly>
 <sly data-sly-test="${wcmmode.disabled}">
-    <sly data-sly-use.model="com.aemcomponentperf.core.models.SlowTeaserModel"/>
-    <div class="cmp-slow-teaser">
-        <h2>Slow Teaser (6s backend delay)</h2>
+    <sly data-sly-use.model="${'com.aemcomponentperf.core.models.DelayModel' @ delaySeconds=6}"/>
+    <div class="cmp-delay-6s">
+        <h2>Delay 6s (backend delay)</h2>
         <p>Teaser description rendered after slow backend processing.</p>
     </div>
 </sly>
