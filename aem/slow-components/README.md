@@ -11,11 +11,11 @@ A self-contained AEM Maven project that installs 4 components designed to simula
 | Delay 6s | `aem-component-perf/components/delay-6s` | 6 s |
 | Delay 8s | `aem-component-perf/components/delay-8s` | 8 s |
 
-All four share a single Sling Model (`DelayModel`) that reads `delaySeconds` injected via the HTL `data-sly-use` expression and blocks in `@PostConstruct` via `Thread.sleep`. The delay happens server-side on every publish-mode render, making it visible to Lighthouse as TTFB cost.
+All four share a single Sling Model (`DelayModel`) that reads `delaySeconds` injected via the HTL `data-sly-use` expression and sleeps in `@PostConstruct` via `Thread.sleep`. The delay happens server-side on every publish-mode render, making it visible to Lighthouse as TTFB cost.
 
 **Author mode** — each component renders a dashed placeholder showing its name; the model is not invoked.
 
-**Publish mode** (`wcmmode=disabled`) — the model is instantiated, sleeps for the configured duration, then renders `Delay Ns (backend delay)`.
+**Publish mode** (`wcmmode=disabled`) — the model is instantiated, sleeps for the configured duration, then renders `Delay ${delaySeconds}s (backend delay)`.
 
 ## Structure
 
@@ -54,4 +54,4 @@ After install:
 1. **Bundle active** — `http://localhost:4502/system/console/bundles` → search `aemcomponentperf.core` → status `Active`.
 2. **Components available** — open any page in AEM Sites editor, insert a component from the group **AEM Slow Perf. Components**.
 3. **Delay confirmed** — render a page containing one of the components at `?wcmmode=disabled`; TTFB should reflect the configured delay.
-4. **Pipeline** — run `node packages/pipeline/dist/index.js run` from the repo root; the attribution report should rank the components in delay order.
+4. **Pipeline** — from the repo root, run `npm run build && node packages/pipeline/dist/index.js run`; the attribution report should rank the components in delay order with `delay-8s` showing the highest TTFB delta.
