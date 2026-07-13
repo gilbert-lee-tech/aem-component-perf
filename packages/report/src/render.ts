@@ -91,24 +91,23 @@ function attributionTable(attribution: AttributionResult[]): string {
   }
   const rows = attribution.map((r, i) => attributionRow(i + 1, r)).join('');
   return `
-  <table>
+  <table id="attribution-table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Component type</th>
-        <th>TBT&thinsp;Δ</th>
-        <th>LCP&thinsp;Δ</th>
-        <th>CLS&thinsp;Δ</th>
-        <th>TTFB&thinsp;Δ</th>
-        <th>Score&thinsp;Δ</th>
-        <th>Bytes&thinsp;Δ</th>
+        <th data-col="0">#</th>
+        <th data-col="1">Component type</th>
+        <th data-col="2">TBT&thinsp;Δ</th>
+        <th data-col="3">LCP&thinsp;Δ</th>
+        <th data-col="4">CLS&thinsp;Δ</th>
+        <th data-col="5">TTFB&thinsp;Δ</th>
+        <th data-col="6">Score&thinsp;Δ</th>
+        <th data-col="7">Bytes&thinsp;Δ</th>
       </tr>
     </thead>
     <tbody>${rows}</tbody>
   </table>
   <p class="table-note">
-    Δ = isolated page median − control page median.
-    Sorted by |TBT Δ| descending.
+    Δ = isolated page median − control page median. Click any column header to sort.
     <span class="bad swatch">■</span> adds cost &nbsp;
     <span class="warn swatch">■</span> minor &nbsp;
     <span class="good swatch">■</span> reduces cost &nbsp;
@@ -133,54 +132,86 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #1a1a2e;
-  background: #f4f5f7;
+  color: #0f172a;
+  background: #f0f4ff;
   margin: 0;
-  padding: 24px 32px 48px;
+  padding: 0 0 64px;
 }
-a { color: #0066cc; }
-h1 { font-size: 20px; font-weight: 700; margin: 0 0 2px; }
-h2 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-     color: #555; margin: 32px 0 10px; }
-.meta { color: #666; font-size: 13px; margin-bottom: 6px; }
+
+/* page header bar */
+.page-header {
+  background: #1e3a5f;
+  color: #fff;
+  padding: 20px 32px 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.page-header h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #fff; }
+.page-header a { color: #93c5fd; text-decoration: none; }
+.page-header a:hover { text-decoration: underline; }
+.page-header .meta { color: #bfdbfe; font-size: 13px; margin: 0; }
+
+.content { padding: 0 32px; }
+
+h2 {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: #2563eb; margin: 28px 0 10px;
+}
 .runs-badge {
   display: inline-block; font-size: 11px; font-weight: 600;
-  background: #e8f0fe; color: #1a56db; border-radius: 10px;
+  background: #dbeafe; color: #1d4ed8; border-radius: 10px;
   padding: 2px 8px; margin-left: 8px; vertical-align: middle;
 }
 
 /* baseline cards */
 .cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
 .card {
-  background: #fff; border: 1px solid #e0e4ea; border-radius: 8px;
-  padding: 12px 18px; min-width: 110px;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  padding: 12px 18px;
+  min-width: 110px;
+  box-shadow: 0 1px 4px rgba(37,99,235,.08);
 }
-.card-label { font-size: 10px; font-weight: 700; letter-spacing: .08em;
-              text-transform: uppercase; color: #888; }
-.card-value { font-size: 24px; font-weight: 700; margin: 2px 0 0; }
-.card-sub   { font-size: 10px; color: #bbb; margin-top: 1px; }
+.card-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #64748b;
+}
+.card-value { font-size: 24px; font-weight: 700; color: #1e3a5f; margin: 2px 0 0; }
+.card-sub   { font-size: 10px; color: #94a3b8; margin-top: 1px; }
 
 /* attribution table */
 table {
   width: 100%; border-collapse: collapse; background: #fff;
-  border: 1px solid #dde1e8; border-radius: 8px; overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  border: 1px solid #bfdbfe; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(37,99,235,.08);
 }
-thead tr { background: #1a1a2e; }
+thead tr { background: #2563eb; }
 thead th {
-  color: #d0d4e0; font-size: 11px; font-weight: 600;
+  color: #eff6ff; font-size: 11px; font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase;
-  padding: 10px 12px; text-align: right; white-space: nowrap;
+  padding: 11px 12px; text-align: right; white-space: nowrap;
+  cursor: pointer; user-select: none;
 }
 thead th:nth-child(1) { text-align: center; width: 36px; }
 thead th:nth-child(2) { text-align: left; }
-tbody tr { border-top: 1px solid #f0f2f5; }
-tbody tr:hover { background: #f8f9fb; }
+thead th:hover { background: #1d4ed8; }
+thead th.sort-asc,
+thead th.sort-desc { background: #1e40af; color: #fff; }
+.sort-icon { opacity: .4; margin-left: 4px; }
+thead th.sort-asc .sort-icon,
+thead th.sort-desc .sort-icon { opacity: 1; }
+
+tbody tr:nth-child(odd) { background: #f0f5ff; }
+tbody tr:nth-child(even) { background: #fff; }
+tbody tr { border-top: 1px solid #e0e9ff; }
+tbody tr:hover { background: #dbeafe; }
 td {
   padding: 8px 12px; text-align: right;
   font-variant-numeric: tabular-nums;
 }
-td.rank { text-align: center; color: #aaa; font-size: 12px; }
+td.rank { text-align: center; color: #94a3b8; font-size: 12px; }
 td.resource-type {
   text-align: left; font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 12px; max-width: 360px;
@@ -188,23 +219,23 @@ td.resource-type {
 }
 
 /* delta colours */
-.bad     { color: #c0392b; font-weight: 700; }
-.warn    { color: #d68910; font-weight: 600; }
-.good    { color: #1e8449; }
-.neutral { color: #bbb; }
+.bad     { color: #dc2626; font-weight: 700; }
+.warn    { color: #d97706; font-weight: 600; }
+.good    { color: #16a34a; }
+.neutral { color: #94a3b8; }
 .swatch  { font-size: 11px; }
 
-.table-note { font-size: 11px; color: #888; margin: 6px 0 0; }
-.empty      { color: #888; font-style: italic; }
+.table-note { font-size: 11px; color: #64748b; margin: 6px 0 0; }
+.empty      { color: #64748b; font-style: italic; }
 
 /* distortions */
 .distortions {
-  background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px;
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;
   padding: 16px 20px; margin-top: 36px;
 }
-.distortions h2 { color: #92400e; margin-top: 0; }
+.distortions h2 { color: #1e3a5f; margin-top: 0; }
 .distortions ul { margin: 0; padding-left: 20px; }
-.distortions li { color: #78350f; margin-bottom: 6px; }
+.distortions li { color: #1e40af; margin-bottom: 6px; }
 `;
 
 export function render(result: PipelineResult): string {
@@ -224,12 +255,16 @@ export function render(result: PipelineResult): string {
 </head>
 <body>
 
-<h1>AEM Component Performance Report</h1>
-<p class="meta">
-  Original page: <a href="${esc(result.originalUrl)}">${esc(result.originalUrl)}</a><br>
-  Measured: ${esc(ts)}
-  <span class="runs-badge">${runsCount} run${runsCount !== 1 ? 's' : ''} per page · median</span>
-</p>
+<div class="page-header">
+  <h1>AEM Component Performance Report</h1>
+  <p class="meta">
+    <a href="${esc(result.originalUrl)}">${esc(result.originalUrl)}</a> &nbsp;·&nbsp;
+    ${esc(ts)}
+    <span class="runs-badge">${runsCount} run${runsCount !== 1 ? 's' : ''} per page · median</span>
+  </p>
+</div>
+
+<div class="content">
 
 <h2>Control page baseline</h2>
 ${baselineCards(result.control.median)}
@@ -243,6 +278,65 @@ ${attributionTable(result.attribution)}
     ${DISTORTIONS.map((d) => `<li>${d}</li>`).join('\n    ')}
   </ul>
 </div>
+
+</div>
+
+<script>
+(function () {
+  var table = document.getElementById('attribution-table');
+  if (!table) return;
+  var tbody = table.querySelector('tbody');
+  var ths = table.querySelectorAll('thead th');
+  var state = { col: 5, dir: -1 }; // default: TTFB Δ descending
+
+  function parseVal(text, colIdx) {
+    if (colIdx === 1) return text.trim().toLowerCase(); // string sort
+    var s = text.replace(/[+−\\u00a0 ]/g, function(c) {
+      return c === '+' ? '' : c === '−' ? '-' : '';
+    }).replace(/[^0-9.\-]/g, '');
+    var n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function updateHeaders() {
+    ths.forEach(function (th, i) {
+      th.classList.remove('sort-asc', 'sort-desc');
+      var icon = th.querySelector('.sort-icon');
+      if (!icon) { icon = document.createElement('span'); icon.className = 'sort-icon'; th.appendChild(icon); }
+      if (i === state.col) {
+        th.classList.add(state.dir === 1 ? 'sort-asc' : 'sort-desc');
+        icon.textContent = state.dir === 1 ? ' ▲' : ' ▼';
+      } else {
+        icon.textContent = ' ⇅';
+      }
+    });
+  }
+
+  function sortTable(colIdx, dir) {
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort(function (a, b) {
+      var av = parseVal(a.cells[colIdx] ? a.cells[colIdx].textContent || '' : '', colIdx);
+      var bv = parseVal(b.cells[colIdx] ? b.cells[colIdx].textContent || '' : '', colIdx);
+      if (av < bv) return -dir;
+      if (av > bv) return dir;
+      return 0;
+    });
+    rows.forEach(function (r) { tbody.appendChild(r); });
+    updateHeaders();
+  }
+
+  ths.forEach(function (th, i) {
+    th.addEventListener('click', function () {
+      if (state.col === i) { state.dir *= -1; }
+      else { state.col = i; state.dir = i === 1 ? 1 : -1; }
+      sortTable(state.col, state.dir);
+    });
+  });
+
+  // apply default sort
+  sortTable(state.col, state.dir);
+})();
+</script>
 
 </body>
 </html>`;
