@@ -6,6 +6,8 @@ Isolate and measure the performance cost of individual AEM component types on a 
 
 A Lighthouse score on a full AEM page tells you the page is slow — not *which component type* makes it slow. This tool attributes performance cost per component type by generating isolated test pages and measuring the delta against a placeholder-only control page.
 
+![AEM Component Performance Report](docs/report-screenshot.png)
+
 ## How it works
 
 1. Read the target page's JCR structure (template, component list, resource types) via MCP.
