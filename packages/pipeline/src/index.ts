@@ -65,7 +65,7 @@ if (subcommand === 'run') {
       const sign = (n: number) => (n >= 0 ? `+${n.toFixed(0)}` : n.toFixed(0));
       console.log(
         `  ${r.resourceType}\n` +
-          `    TBT ${sign(r.tbt)}ms  LCP ${sign(r.lcp)}ms  CLS ${r.cls.toFixed(3)}  score ${sign(r.performanceScore)}`,
+          `    TTFB ${sign(r.ttfb)}ms  TBT ${sign(r.tbt)}ms  LCP ${sign(r.lcp)}ms  CLS ${r.cls.toFixed(3)}  score ${sign(r.performanceScore)}`,
       );
     }
 
